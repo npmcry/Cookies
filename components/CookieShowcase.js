@@ -1,7 +1,26 @@
+"use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useState, useEffect } from "react";
 
 export default function CookieShowcase() {
+  const [cart, setCart] = useState([]);
+
+  // Load cart from localStorage on component mount
+  useEffect(() => {
+    const storedCart = localStorage.getItem("cart");
+    if (storedCart) {
+      setCart(JSON.parse(storedCart));
+    }
+  }, []);
+
+  // Function to add a cookie to the cart
+  const addToCart = (cookie) => {
+    const updatedCart = [...cart, cookie];
+    setCart(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+  };
+
   const cookies = [
     {
       id: "cookie1",
@@ -91,7 +110,11 @@ export default function CookieShowcase() {
               <button className="px-6 py-3 border border-white rounded-full hover:bg-black hover:text-white transition">
                 Learn More
               </button>
-              <button className="px-6 py-3 bg-white text-black rounded-full hover:bg-gray-700 transition">
+              {/* ✅ "Order Now" Button Adds to Cart */}
+              <button
+                onClick={() => addToCart(cookie)}
+                className="px-6 py-3 bg-white text-black rounded-full hover:bg-gray-700 transition"
+              >
                 Order Now
               </button>
             </div>

@@ -15,8 +15,8 @@ const montserrat = Montserrat_Alternates({
 });
 
 export const metadata = {
-  title: "My Portfolio",
-  description: "Personal website of Thanh",
+  title: "Cookies",
+  description: "Stay Informed. Cookies are taking over the world!",
 };
 
 export default function RootLayout({ children }) {

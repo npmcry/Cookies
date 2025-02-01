@@ -5,9 +5,18 @@ import { useState } from "react";
 import { Search } from "lucide-react"; // Importing Search for Nav bar
 import { Card } from "../components/ui/Card";
 import CookieShowcase from "../components/CookieShowcase"; // ✅ Import CookieShowcase component
+import { ShoppingCart } from "lucide-react"; // ✅ Import ShoppingCart icon
+
+
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState("home");
+
+  const [cart, setCart] = useState([]); // ✅ Add this at the top inside the component
+
+  const addToCart = (item) => {
+    setCart([...cart, item]);
+  };
 
   // 🔥 Scroll to the correct cookie
   const handleScrollToCookie = (cookieId) => {
@@ -32,12 +41,22 @@ export default function Home() {
         <ul className="flex items-center gap-8 text-sm font-normal">
           <li><a href="#home" className="hover:text-gray-400 transition">Home</a></li>
           <li><a href="#about" className="hover:text-gray-400 transition">About</a></li>
-          <li><a href="#projects" className="hover:text-gray-400 transition">Projects</a></li>
-          <li><a href="#contact" className="hover:text-gray-400 transition">Contact</a></li>
+          <li><a href="#Bad" className="hover:text-gray-400 transition">Projects</a></li>
+          <li><a href="#Flavors" className="hover:text-gray-400 transition">Contact</a></li>
 
           {/* Search Icon - Right Next to Links */}
           <button className="text-bla hover:text-gray-400 transition">
             <Search size={20} />
+          </button>
+          {/* Cart Button (aligned right) */}
+          <button onClick={() => window.location.href = "/cart"} className="relative text-black hover:text-gray-400 transition">
+            <ShoppingCart size={28} /> {/* ✅ Cart Icon */}
+            {/* Show number of items in cart */}
+            {cart.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-2 py-1">
+                {cart.length}
+              </span>
+            )}
           </button>
         </ul>
       </nav>
@@ -81,8 +100,8 @@ export default function Home() {
                 >
                   <Image
                     src={cookie.src}
-                    width={300}
-                    height={300}
+                    width={330}
+                    height={330}
                     alt={`Cookie ${index + 1}`}
                   />
                 </motion.div>
@@ -104,21 +123,74 @@ export default function Home() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-6 text-black">
-        <motion.h2 initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} className="text-5xl font-bold">
+      <section
+        id="about"
+        className="relative flex flex-col items-center justify-center min-h-screen bg-white px-6 text-black overflow-hidden"
+      >
+        {/* Falling Cookies Effect (Spreads & Falls Fully to Bottom) */}
+        <div className="absolute inset-0 overflow-hidden">
+          {["cookie1.jpg", "cookie2.jpg", "cookie3.jpg", "cookie4.jpg"].map((cookie, index) => (
+            <motion.img
+              key={index}
+              src={`/${cookie}`}
+              alt={`Falling ${cookie}`}
+              className="absolute w-40 md:w-64 opacity-90" // Bigger cookies 🍪
+              initial={{
+                x: Math.random() * window.innerWidth * 0.9, // Spread across width
+                y: -300, // Start way above the section
+                rotate: Math.random() * 360, // Random start rotation
+              }}
+              animate={{
+                y: "100vh", // ✅ Falls all the way to the bottom of the section
+                rotate: [Math.random() * 360, Math.random() * 720], // Rotates naturally
+              }}
+              transition={{
+                duration: Math.random() * 7 + 5, // Random fall speed (5-12 sec)
+                ease: "easeInOut", // ✅ Smooth fall
+                repeat: Infinity, // Loops forever
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Title & Text */}
+        <motion.h2
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="text-[42px] md:text-[50px] font-extrabold leading-tight"
+        >
           Cookies are not good, boooo!!!
         </motion.h2>
       </section>
 
+
+
+
       {/* Projects Section */}
-      <section id="projects" className="flex flex-col items-center justify-center min-h-screen bg-white px-6 text-black">
-        <motion.h2 initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} className="text-5xl font-bold">
+      <section
+        id="projects"
+        className="flex flex-col items-center justify-center min-h-screen px-6 text-black bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/background.jpg')" }}
+      >
+        <motion.h2
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="text-[42px] md:text-[50px] font-extrabold leading-tight"
+        >
           Why are Cookies Bad?
         </motion.h2>
-        <motion.p initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.2 }} className="mt-8 text-xl text-gray-700 text-center">
+        <motion.p
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2 }}
+          className="mt-8 text-xl text-black-800 text-center"
+        >
           Cookies are high in sugar & they get stored on your computer, lame af.
         </motion.p>
       </section>
+
 
       {/* ✅ INSERT THE COOKIE SHOWCASE SECTION BELOW */}
       <CookieShowcase />
