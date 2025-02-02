@@ -220,8 +220,8 @@ export default function Home() {
                 >
                   <Image
                     src={cookie.src}
-                    width={330}
-                    height={330}
+                    width={300}
+                    height={300}
                     alt={`Cookie ${index + 1}`}
                   />
                 </motion.div>
