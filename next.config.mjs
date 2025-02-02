@@ -1,4 +1,6 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {};
-
-export default nextConfig;
+export default {
+    output: 'export',
+    basePath: '/Cookies',  // Change this to match your GitHub repo name
+    assetPrefix: '/Cookies/',
+  };
+  

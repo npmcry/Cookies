@@ -54,7 +54,23 @@ export default function Home() {
     setCartItems([]); // ✅ Reset cart state
     setIsCartOpen(false); // ✅ Close cart after checkout
     // Redirect to checkout page (change this if you have a checkout route)
-    window.location.href = "/checkout";
+    const handleCheckout = () => {
+      if (cartItems.length === 0) {
+        alert("Your cart is empty. Add some cookies first!");
+        return;
+      }
+    
+      alert("Redirecting to checkout...");
+      localStorage.removeItem("cart");
+      setCartItems([]);
+      setIsCartOpen(false);
+    
+      // ✅ Ensures it only runs in the browser
+      if (typeof window !== "undefined") {
+        window.location.href = "/checkout";
+      }
+    };
+    
   };
 
 
@@ -252,7 +268,8 @@ export default function Home() {
               alt={`Falling ${cookie}`}
               className="absolute w-40 md:w-64 opacity-90" // Bigger cookies 🍪
               initial={{
-                x: Math.random() * window.innerWidth * 0.9, // Spread across width
+                x: typeof window !== "undefined" ? Math.random() * window.innerWidth * 0.9 : Math.random() * 100,
+
                 y: -300, // Start way above the section
                 rotate: Math.random() * 360, // Random start rotation
               }}
