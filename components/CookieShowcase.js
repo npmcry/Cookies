@@ -3,7 +3,8 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
-export default function CookieShowcase() {
+export default function CookieShowcase({ setCartItems }) {
+
   const [cart, setCart] = useState([]);
 
   // Load cart from localStorage on component mount
@@ -16,10 +17,25 @@ export default function CookieShowcase() {
 
   // Function to add a cookie to the cart
   const addToCart = (cookie) => {
-    const updatedCart = [...cart, cookie];
+    const existingItem = cart.find(item => item.id === cookie.id);
+  
+    let updatedCart;
+    if (existingItem) {
+      updatedCart = cart.map(item =>
+        item.id === cookie.id ? { ...item, quantity: item.quantity + 1 } : item
+      );
+    } else {
+      updatedCart = [...cart, { ...cookie, quantity: 1 }];
+    }
+  
     setCart(updatedCart);
+    setCartItems(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
+  
+
+
+
 
   const cookies = [
     {
@@ -30,6 +46,7 @@ export default function CookieShowcase() {
       backgroundColor: "bg-[#734b3a]",
       alignment: "right",
       rotate: -15,
+      price: 5.39
     },
     {
       id: "cookie2",
@@ -39,6 +56,7 @@ export default function CookieShowcase() {
       backgroundColor: "bg-[#C28ED2]",
       alignment: "left",
       rotate: 15,
+      price: 5.39
     },
     {
       id: "cookie3",
@@ -48,6 +66,7 @@ export default function CookieShowcase() {
       backgroundColor: "bg-[#A2D149]",
       alignment: "right",
       rotate: -12,
+      price: 5.39
     },
     {
       id: "cookie4",
@@ -57,6 +76,7 @@ export default function CookieShowcase() {
       backgroundColor: "bg-[#D4A373]",
       alignment: "left",
       rotate: 12,
+      price: 5.39
     },
   ];
 
@@ -66,9 +86,8 @@ export default function CookieShowcase() {
         <motion.div
           key={cookie.id}
           id={cookie.id}
-          className={`relative w-[85%] max-w-[1000px] flex ${
-            cookie.alignment === "right" ? "justify-end" : "justify-start"
-          } items-center min-h-[250px] sm:min-h-[350px] lg:min-h-[450px]`}
+          className={`relative w-[85%] max-w-[1000px] flex ${cookie.alignment === "right" ? "justify-end" : "justify-start"
+            } items-center min-h-[250px] sm:min-h-[350px] lg:min-h-[450px]`}
         >
           {/* Background Box that appears on hover */}
           <motion.div
@@ -81,9 +100,8 @@ export default function CookieShowcase() {
           <motion.div
             whileHover={{ rotate: cookie.rotate + 5, scale: 1.1 }}
             transition={{ type: "spring", stiffness: 150, damping: 12 }}
-            className={`absolute ${
-              cookie.alignment === "right" ? "-left-28 md:-left-40" : "-right-28 md:-right-40"
-            } z-20`}
+            className={`absolute ${cookie.alignment === "right" ? "-left-28 md:-left-40" : "-right-28 md:-right-40"
+              } z-20`}
           >
             <Image
               src={cookie.src}
@@ -96,9 +114,8 @@ export default function CookieShowcase() {
 
           {/* Text Description (Better Layout) */}
           <div
-            className={`relative z-10 p-[30px] text-white max-w-[550px] flex flex-col gap-y-4 ${
-              cookie.alignment === "right" ? "items-start text-left" : "items-end text-right"
-            }`}
+            className={`relative z-10 p-[30px] text-white max-w-[550px] flex flex-col gap-y-4 ${cookie.alignment === "right" ? "items-start text-left" : "items-end text-right"
+              }`}
           >
             <h2 className="text-[42px] md:text-[50px] font-extrabold leading-tight">
               {cookie.title}
