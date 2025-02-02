@@ -59,18 +59,19 @@ export default function Home() {
         alert("Your cart is empty. Add some cookies first!");
         return;
       }
-    
+
       alert("Redirecting to checkout...");
       localStorage.removeItem("cart");
       setCartItems([]);
       setIsCartOpen(false);
-    
-      // ✅ Ensures it only runs in the browser
-      if (typeof window !== "undefined") {
-        window.location.href = "/checkout";
-      }
+
+      // ✅ Next.js-safe redirect (no window)
+      setTimeout(() => {
+        document.location.assign("/checkout");
+      }, 500);
+
     };
-    
+
   };
 
 
@@ -268,11 +269,11 @@ export default function Home() {
               alt={`Falling ${cookie}`}
               className="absolute w-40 md:w-64 opacity-90" // Bigger cookies 🍪
               initial={{
-                x: typeof window !== "undefined" ? Math.random() * window.innerWidth * 0.9 : Math.random() * 100,
-
+                x: typeof globalThis !== "undefined" && globalThis.innerWidth ? Math.random() * globalThis.innerWidth * 0.9 : Math.random() * 100,
                 y: -300, // Start way above the section
                 rotate: Math.random() * 360, // Random start rotation
               }}
+
               animate={{
                 y: "100vh", // ✅ Falls all the way to the bottom of the section
                 rotate: [Math.random() * 360, Math.random() * 720], // Rotates naturally
